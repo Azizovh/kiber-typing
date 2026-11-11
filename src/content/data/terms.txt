@@ -1,0 +1,186 @@
+@topic attacks | Attacks
+phishing ## tricking people into giving up secrets through fake messages
+spear phishing ## phishing aimed at one specific person or team
+smishing ## phishing over SMS
+vishing ## phishing over a voice call
+social engineering ## manipulating people instead of machines
+brute force ## trying every possible password
+dictionary attack ## trying passwords from a wordlist
+password spraying ## one common password tried against many accounts
+credential stuffing ## reusing leaked username and password pairs
+man-in-the-middle ## secretly relaying traffic between two parties
+replay attack ## resending captured valid traffic
+session hijacking ## taking over someone's logged-in session
+privilege escalation ## going from limited access to higher rights
+lateral movement ## moving from one compromised machine to others
+pivoting ## using a compromised host to reach networks behind it
+persistence ## keeping access after a reboot or password change
+exfiltration ## getting data out of the network
+denial of service ## making a system unavailable
+DDoS ## denial of service from many sources at once
+supply chain attack ## compromising a target through its vendors
+watering hole ## infecting a site the victims are known to visit
+zero-day ## a flaw exploited before a fix exists
+buffer overflow ## writing past the end of a memory buffer
+race condition ## a bug that depends on timing
+ARP spoofing ## forging ARP replies to redirect local traffic
+DNS poisoning ## planting false DNS answers
+evil twin ## a rogue access point imitating a real one
+deauthentication ## kicking clients off a Wi-Fi network
+pass-the-hash ## logging in with a hash instead of a password
+kerberoasting ## cracking service tickets requested from Kerberos
+
+@topic web | Web security
+SQL injection ## inserting SQL through user input
+XSS ## cross-site scripting: running script in another user's browser
+CSRF ## cross-site request forgery
+SSRF ## server-side request forgery
+IDOR ## insecure direct object reference
+LFI ## local file inclusion
+RFI ## remote file inclusion
+RCE ## remote code execution
+XXE ## XML external entity injection
+SSTI ## server-side template injection
+command injection ## smuggling shell commands into an application
+path traversal ## escaping the intended directory with ../
+open redirect ## a link that forwards visitors anywhere
+clickjacking ## hiding a real button under a fake page
+deserialization ## turning bytes back into objects, often unsafely
+file upload ## a classic route to code execution
+web shell ## a script on the server that runs your commands
+cookie ## small state stored by the browser
+session token ## the secret that identifies a logged-in user
+JWT ## JSON Web Token
+CORS ## cross-origin resource sharing
+same-origin policy ## the browser rule separating websites
+WAF ## web application firewall
+OWASP ## the Open Worldwide Application Security Project
+payload ## the part of an attack that does the work
+fuzzing ## throwing unexpected input at a program
+enumeration ## systematically listing what a target exposes
+endpoint ## a URL an API answers on
+parameter ## a named value sent with a request
+proxy ## a middleman for network traffic
+
+@topic malware | Malware
+malware ## software built to do harm
+ransomware ## encrypts files and demands payment
+trojan ## malware disguised as something useful
+worm ## malware that spreads by itself
+rootkit ## malware that hides inside the system
+backdoor ## a hidden way back in
+keylogger ## records what is typed
+spyware ## silently watches the user
+botnet ## a network of infected machines under one controller
+dropper ## a small program that installs the real malware
+loader ## fetches and runs a payload in memory
+C2 ## command and control server
+beacon ## a compromised host checking in with its C2
+obfuscation ## making code hard to read or detect
+packer ## compresses or encrypts an executable
+shellcode ## raw machine code used as a payload
+reverse shell ## the target connects back to the attacker
+bind shell ## the target listens and the attacker connects
+sandbox ## an isolated place to run suspicious code
+indicator of compromise ## evidence that a breach happened
+
+@topic crypto | Cryptography
+encryption ## scrambling data so only key holders can read it
+decryption ## turning ciphertext back into plaintext
+plaintext ## readable, unencrypted data
+ciphertext ## encrypted data
+hash ## a one-way fingerprint of data
+salt ## random data added before hashing a password
+symmetric ## the same key encrypts and decrypts
+asymmetric ## a public key encrypts, a private key decrypts
+public key ## the half you can share
+private key ## the half you must protect
+certificate ## a signed statement binding a key to an identity
+digital signature ## proof that data came from a key holder
+AES ## the standard symmetric cipher
+RSA ## a widely used asymmetric algorithm
+SHA-256 ## a common secure hash function
+MD5 ## an old, broken hash function
+bcrypt ## a slow hash designed for passwords
+TLS ## the protocol that secures HTTPS
+handshake ## the opening negotiation of a secure connection
+rainbow table ## precomputed hashes for fast lookups
+base64 ## an encoding, not encryption
+entropy ## how unpredictable a secret is
+nonce ## a number used only once
+PKI ## public key infrastructure
+steganography ## hiding data inside other data
+
+@topic network | Networking
+TCP ## reliable, connection-based transport
+UDP ## fast, connectionless transport
+ICMP ## the protocol behind ping
+DNS ## turns names into IP addresses
+DHCP ## hands out IP addresses automatically
+ARP ## maps IP addresses to MAC addresses
+HTTP ## the protocol of the web
+HTTPS ## HTTP protected by TLS
+SSH ## encrypted remote shell
+FTP ## old, unencrypted file transfer
+SMB ## Windows file sharing
+RDP ## Windows remote desktop
+SNMP ## network device management protocol
+LDAP ## directory access protocol
+VPN ## an encrypted tunnel to another network
+NAT ## rewriting addresses at the network edge
+subnet ## a slice of an IP network
+gateway ## the way out of a local network
+firewall ## filters traffic by rules
+port ## a numbered door on a host
+socket ## an IP address plus a port
+packet ## one unit of network data
+three-way handshake ## SYN, SYN-ACK, ACK
+port scanning ## probing which ports are open
+banner grabbing ## reading what a service says about itself
+packet sniffing ## capturing traffic off the wire
+tunneling ## wrapping one protocol inside another
+port forwarding ## relaying a port to another host
+MAC address ## a network card's hardware address
+localhost ## this machine, 127.0.0.1
+
+@topic defense | Defense & operations
+blue team ## the defenders
+red team ## simulated attackers
+purple team ## red and blue working together
+SOC ## security operations center
+SIEM ## collects and correlates security logs
+IDS ## intrusion detection system
+IPS ## intrusion prevention system
+EDR ## endpoint detection and response
+honeypot ## a decoy system built to be attacked
+threat hunting ## actively searching for intruders
+incident response ## handling a breach
+forensics ## reconstructing what happened from evidence
+hardening ## reducing a system's attack surface
+patching ## installing security fixes
+least privilege ## give only the access that is needed
+defense in depth ## several layers of protection
+zero trust ## never assume a request is safe
+MFA ## multi-factor authentication
+authentication ## proving who you are
+authorization ## deciding what you may do
+access control ## enforcing who can reach what
+audit log ## a record of who did what
+backup ## a copy to restore from
+vulnerability ## a weakness that can be exploited
+exploit ## code or technique that abuses a vulnerability
+CVE ## a public identifier for a known vulnerability
+CVSS ## a score for how severe a vulnerability is
+attack surface ## everything an attacker could touch
+threat model ## who might attack and how
+penetration test ## an authorised simulated attack
+bug bounty ## rewards for reporting vulnerabilities
+OSINT ## open-source intelligence
+reconnaissance ## gathering information before an attack
+footprinting ## mapping a target's public presence
+scope ## what you are allowed to test
+rules of engagement ## the agreed limits of a test
+proof of concept ## a minimal demonstration of a flaw
+CTF ## capture the flag competition
+kill chain ## the stages of an attack
+MITRE ATT&CK ## a catalogue of attacker techniques

@@ -1,0 +1,175 @@
+~ ## your home directory
+~/ ## path inside your home directory
+/ ## the root of the filesystem
+./ ## the current directory
+../ ## the parent directory
+../../ ## two directories up
+/etc/ ## system configuration lives here
+/tmp/ ## world-writable temporary directory
+/var/log/ ## where logs are kept
+/usr/share/wordlists/ ## Kali's wordlist directory
+/dev/null ## the black hole: anything written here disappears
+/bin/bash ## the bash shell binary
+/etc/passwd ## local user accounts
+/etc/shadow ## password hashes
+~/.ssh/ ## your SSH keys and config
+~/.bashrc ## bash startup file
+/opt/ ## optional, manually installed software
+/proc/ ## live kernel and process information
+/home/kali/ ## the default Kali user's home
+/root/ ## root's home directory
+| ## pipe: send output of one command into the next
+|| ## run the next command only if the previous one failed
+& ## run the command in the background
+&& ## run the next command only if the previous one succeeded
+; ## run commands one after another
+> ## redirect output to a file, overwriting it
+>> ## redirect output to a file, appending
+< ## feed a file into a command's input
+<< ## here-document
+<<< ## here-string
+2> ## redirect error output
+2>&1 ## send errors to the same place as normal output
+2>/dev/null ## throw error messages away
+&>/dev/null ## throw away all output
+>&2 ## write to standard error
+$ ## variable prefix (and the normal user prompt)
+# ## comment (and the root prompt)
+$HOME ## your home directory as a variable
+$PATH ## where the shell looks for programs
+$USER ## the current username
+$? ## exit status of the last command
+$! ## PID of the last background job
+$$ ## PID of the current shell
+$0 ## name of the running script
+$1 ## first argument of a script
+$@ ## all arguments of a script
+$# ## number of arguments
+$(id) ## command substitution: use a command's output
+$(whoami) ## insert the current username
+$(pwd) ## insert the current directory
+${PATH} ## variable in braces
+${HOME}/ ## braces keep the variable name unambiguous
+`id` ## old-style command substitution with backticks
+"$1" ## quote variables so spaces don't break them
+"$@" ## every argument, each safely quoted
+'$1' ## single quotes: nothing inside is expanded
+\ ## escape the next character
+\n ## newline escape
+\t ## tab escape
+\x90 ## a byte written in hex (here: NOP)
+\\ ## a literal backslash
+* ## wildcard: any number of characters
+*.txt ## every file ending in .txt
+*.conf ## every config file
+? ## wildcard: exactly one character
+[0-9] ## any single digit
+[a-z] ## any lowercase letter
+[A-Z] ## any uppercase letter
+[^0-9] ## anything except a digit
+{1..10} ## brace expansion: numbers one to ten
+{a,b,c} ## brace expansion: a list
+file.{txt,bak} ## expands to file.txt and file.bak
+^ ## start of line in a regular expression
+^root ## lines starting with "root"
+$' ## ANSI-C quoting prefix
+.* ## regex: anything
+\d+ ## regex: one or more digits
+\s ## regex: whitespace
+(a|b) ## regex: either a or b
+#!/bin/bash ## shebang: run this script with bash
+#!/usr/bin/env ## portable shebang
+!! ## repeat the previous command
+!$ ## last argument of the previous command
+sudo !! ## rerun the previous command as root
+-la ## common ls flags: long listing, all files
+-sV ## nmap: version detection
+-sC ## nmap: default scripts
+-p- ## nmap: all ports
+-oN ## nmap: normal output to a file
+-Pn ## nmap: skip host discovery
+-xzvf ## tar: extract a gzip archive verbosely
+-lvnp ## netcat: listen, verbose, no DNS, port
+--help ## ask a tool how to use it
+--version ## print a tool's version
+-h ## short help flag
+-v ## verbose
+-vv ## more verbose
+-r ## recursive
+-u ## usually "url" or "user"
+-w ## usually "wordlist"
+-o ## usually "output"
+--batch ## sqlmap: never ask questions
+--min-rate ## nmap: minimum packets per second
+user@host ## SSH target format
+root@kali ## root on a Kali machine
+kali@kali:~$ ## the default Kali prompt
+root@kali:~# ## the root prompt
+:~$ ## end of a normal user's prompt
+:~# ## end of root's prompt
+127.0.0.1 ## localhost
+0.0.0.0 ## every interface
+10.10.10.5 ## a typical lab target
+192.168.1.1 ## a typical home router
+10.0.0.0/8 ## a private network in CIDR notation
+192.168.1.0/24 ## a /24 subnet: 256 addresses
+127.0.0.1:8080 ## address and port (Burp's default proxy)
+0.0.0.0:4444 ## listen on every interface, port 4444
+::1 ## IPv6 localhost
+:80 ## HTTP port
+:443 ## HTTPS port
+:22 ## SSH port
+http:// ## plain HTTP scheme
+https:// ## HTTP over TLS
+ftp:// ## FTP scheme
+smb:// ## SMB scheme
+ssh:// ## SSH scheme (used by hydra)
+file:/// ## local file scheme
+?id=1 ## a query-string parameter
+&page=2 ## a second parameter
+%20 ## URL-encoded space
+%27 ## URL-encoded single quote
+%00 ## URL-encoded null byte
+../../../etc/passwd ## path traversal payload
+' OR 1=1-- ## textbook SQL injection test
+1' AND '1'='1 ## boolean SQL injection probe
+<script> ## opening script tag (XSS test)
+</script> ## closing script tag
+{{7*7}} ## template injection probe
+0x41 ## hex for the letter A
+0xdeadbeef ## a classic hex marker value
+0x00 ## null byte in hex
+AA:BB:CC:DD:EE:FF ## MAC address format
+/dev/tcp/ ## bash's built-in TCP device
+/dev/sda1 ## first partition of the first disk
+0>&1 ## point input at the same place as output
+>& ## redirect both output streams
+chmod +x ## add the execute bit
+chmod 644 ## owner read/write, others read
+chmod 777 ## everyone can do everything (avoid)
+rwxr-xr-x ## permission string for 755
+-rw------- ## permission string for 600
+uid=0(root) ## what "id" prints when you are root
+key=value ## environment variable or parameter format
+LHOST= ## Metasploit: your address
+LPORT= ## Metasploit: your port
+== ## equality test
+!= ## inequality test
+-eq ## bash numeric equality
+-ne ## bash numeric inequality
+[[ ## bash test, opening
+]] ## bash test, closing
+() ## subshell or function parentheses
+{} ## block braces (and find's placeholder)
+[] ## test brackets
+<> ## angle brackets
+"" ## empty double-quoted string
+'' ## empty single-quoted string
+-- ## end of options
+_ ## underscore
++ ## plus
+= ## assignment
+% ## percent sign
+@ ## at sign
+: ## colon
+, ## comma
