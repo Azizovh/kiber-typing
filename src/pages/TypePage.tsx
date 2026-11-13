@@ -47,7 +47,7 @@ function ModeBar() {
             <option value="">{t('opt.allTopics')}</option>
             {COMMAND_TOPICS.map((topic) => (
               <option key={topic.id} value={topic.id}>
-                {topic.title}
+                {t.opt(`topic.cmd.${topic.id}`, topic.title)}
               </option>
             ))}
           </select>

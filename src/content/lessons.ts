@@ -8,6 +8,8 @@ export interface Lesson {
   desc: string;
   /** Keys this lesson focuses on (shown on the card). */
   keys?: string;
+  /** Generated lessons: how to rebuild title and description in another language. */
+  i18n?: { topicKey: string; topicTitle: string; part?: string; descKey: string; count: number };
   build: () => Token[];
 }
 
@@ -192,6 +194,13 @@ const commandLessons: Lesson[] = COMMAND_TOPICS.flatMap((topic) =>
     group: 'commands',
     title: all.length > 1 ? `${topic.title} ${ROMAN[i]}` : topic.title,
     desc: `${items.length} real command lines. Finish each one with Enter.`,
+    i18n: {
+      topicKey: `topic.cmd.${topic.id}`,
+      topicTitle: topic.title,
+      part: all.length > 1 ? ROMAN[i] : undefined,
+      descKey: 'lesson.cmdDesc',
+      count: items.length,
+    },
     build: () => items.flatMap(commandTokens),
   })),
 );
@@ -202,6 +211,13 @@ const termLessons: Lesson[] = TERM_TOPICS.flatMap((topic) =>
     group: 'terms',
     title: all.length > 1 ? `${topic.title} ${ROMAN[i]}` : topic.title,
     desc: `${items.length} terms, each explained while you type it.`,
+    i18n: {
+      topicKey: `topic.term.${topic.id}`,
+      topicTitle: topic.title,
+      part: all.length > 1 ? ROMAN[i] : undefined,
+      descKey: 'lesson.termDesc',
+      count: items.length,
+    },
     build: () => items.flatMap(flowTokens),
   })),
 );

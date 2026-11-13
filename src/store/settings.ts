@@ -9,7 +9,19 @@ export const DURATIONS = [15, 30, 60, 120] as const;
 export const WORD_COUNTS = [10, 25, 50, 100] as const;
 export const FONT_SIZES = [20, 24, 28, 32] as const;
 
+export type Lang = 'en' | 'uz' | 'ru';
+
+/** First visit: follow the browser's language when we have it. */
+function detectLang(): Lang {
+  const nav = typeof navigator === 'undefined' ? '' : navigator.language.toLowerCase();
+  if (nav.startsWith('uz')) return 'uz';
+  if (nav.startsWith('ru')) return 'ru';
+  return 'en';
+}
+
 export interface Settings {
+  /** Interface language. The typing content is always English. */
+  lang: Lang;
   theme: Theme;
   category: Category;
   /** Command topic filter; null = all topics. */
@@ -31,6 +43,7 @@ interface SettingsStore extends Settings {
 export const useSettings = create<SettingsStore>()(
   persist(
     (set) => ({
+      lang: detectLang(),
       theme: 'kali',
       category: 'mixed',
       topic: null,

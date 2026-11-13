@@ -54,6 +54,11 @@ export function App() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
+  const lang = useSettings((s) => s.lang);
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   useEffect(() => {
     initAuth();
   }, []);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useT } from '../i18n';
+import { LANGUAGES, useT } from '../i18n';
 import { useAuth } from '../store/auth';
 import { useData } from '../store/data';
 import { FONT_SIZES, THEMES, useSettings } from '../store/settings';
@@ -15,6 +15,7 @@ function Toggle({
   value: boolean;
   onChange: (v: boolean) => void;
 }) {
+  const t = useT();
   return (
     <div className="setting">
       <div>
@@ -23,10 +24,10 @@ function Toggle({
       </div>
       <div className="seg">
         <button className={value ? 'on' : ''} onClick={() => onChange(true)}>
-          on
+          {t.opt('common.on', 'on')}
         </button>
         <button className={!value ? 'on' : ''} onClick={() => onChange(false)}>
-          off
+          {t.opt('common.off', 'off')}
         </button>
       </div>
     </div>
@@ -98,9 +99,11 @@ export function SettingsPage() {
           <p className="muted small">{t('settings.languageHelp')}</p>
         </div>
         <div className="seg">
-          <button className="on">english</button>
-          <button disabled>o'zbek</button>
-          <button disabled>русский</button>
+          {LANGUAGES.map((l) => (
+            <button key={l.id} className={s.lang === l.id ? 'on' : ''} onClick={() => s.set({ lang: l.id })}>
+              {l.label}
+            </button>
+          ))}
         </div>
       </div>
 

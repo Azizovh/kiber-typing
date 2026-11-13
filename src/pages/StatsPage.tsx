@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Chart } from '../components/Chart';
 import type { TestResult } from '../engine/types';
-import { useT } from '../i18n';
+import { useT, type Translator } from '../i18n';
 import { useData } from '../store/data';
 import { DURATIONS } from '../store/settings';
 
@@ -14,11 +14,12 @@ function formatDuration(ms: number): string {
   return `${Math.floor(minutes / 60)} h ${minutes % 60} min`;
 }
 
-function describe(r: TestResult): string {
-  if (r.config.kind === 'lesson') return `lesson · ${r.config.lessonId ?? ''}`;
-  if (r.config.kind === 'practice') return 'mistake drill';
+function describe(r: TestResult, t: Translator): string {
+  if (r.config.kind === 'lesson') return `${t.opt('stats.lesson', 'lesson')} · ${r.config.lessonId ?? ''}`;
+  if (r.config.kind === 'practice') return t.opt('stats.drill', 'mistake drill');
   const topic = r.config.topic ? ` (${r.config.topic})` : '';
-  return `${r.config.category}${topic} · ${r.config.mode} ${r.config.length}`;
+  const mode = t(r.config.mode === 'time' ? 'mode.time' : 'mode.words');
+  return `${t(`cat.${r.config.category}`)}${topic} · ${mode} ${r.config.length}`;
 }
 
 export function StatsPage() {
@@ -143,7 +144,7 @@ export function StatsPage() {
                   <td>{r.accuracy.toFixed(1)}%</td>
                   <td>{r.raw.toFixed(1)}</td>
                   <td>{Math.round(r.consistency)}%</td>
-                  <td>{describe(r)}</td>
+                  <td>{describe(r, t)}</td>
                   <td className="muted">{new Date(r.at).toLocaleString()}</td>
                 </tr>
               ))}

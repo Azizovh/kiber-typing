@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Runner } from '../components/Runner';
-import { LESSONS, LESSON_GROUPS, findLesson, starsFor } from '../content/lessons';
+import { LESSONS, LESSON_GROUPS, findLesson, starsFor, type Lesson } from '../content/lessons';
 import type { Category, RunConfig, TestResult } from '../engine/types';
-import { useT } from '../i18n';
+import { useT, type Translator } from '../i18n';
 import { useData } from '../store/data';
 
 const GROUP_CATEGORY: Record<string, Category> = {
@@ -12,6 +12,22 @@ const GROUP_CATEGORY: Record<string, Category> = {
   commands: 'commands',
   terms: 'terms',
 };
+
+/** Lesson title and description in the interface language (English when untranslated). */
+function lessonText(t: Translator, lesson: Lesson): { title: string; desc: string } {
+  const g = lesson.i18n;
+  if (!g) {
+    return {
+      title: t.opt(`lesson.${lesson.id}.title`, lesson.title),
+      desc: t.opt(`lesson.${lesson.id}.desc`, lesson.desc),
+    };
+  }
+  const topic = t.opt(g.topicKey, g.topicTitle);
+  return {
+    title: g.part ? `${topic} ${g.part}` : topic,
+    desc: t.opt(g.descKey, lesson.desc, { n: g.count }),
+  };
+}
 
 export function Stars({ n }: { n: number }) {
   return (
@@ -43,20 +59,21 @@ export function LessonsPage() {
 
       {LESSON_GROUPS.map((group) => (
         <section key={group.id} className="lesson-group">
-          <h2>{group.title}</h2>
-          <p className="muted">{group.desc}</p>
+          <h2>{t.opt(`group.${group.id}.title`, group.title)}</h2>
+          <p className="muted">{t.opt(`group.${group.id}.desc`, group.desc)}</p>
           <div className="cards">
             {group.lessons.map((lesson, i) => {
               const p = progress[lesson.id];
+              const text = lessonText(t, lesson);
               return (
                 <Link key={lesson.id} to={`/lessons/${lesson.id}`} className={`card${p ? ' done' : ''}`}>
                   <div className="card-top">
                     <span className="card-num">{String(i + 1).padStart(2, '0')}</span>
                     <Stars n={p?.stars ?? 0} />
                   </div>
-                  <h3>{lesson.title}</h3>
+                  <h3>{text.title}</h3>
                   {lesson.keys && <code className="card-keys">{lesson.keys}</code>}
-                  <p className="muted small">{lesson.desc}</p>
+                  <p className="muted small">{text.desc}</p>
                   {p && (
                     <p className="card-best">
                       {Math.round(p.wpm)} wpm · {Math.floor(p.accuracy)}%
@@ -108,7 +125,7 @@ export function LessonPage() {
           <span>{stars === 0 ? t('lessons.retry') : t('lessons.passed')}</span>
           {nextLesson && stars > 0 && (
             <Link className="btn primary" to={`/lessons/${nextLesson.id}`}>
-              {t('lessons.next')}: {nextLesson.title} →
+              {t('lessons.next')}: {lessonText(t, nextLesson).title} →
             </Link>
           )}
         </div>
@@ -134,8 +151,8 @@ export function LessonPage() {
         <Link to="/lessons" className="back">
           ← {t('lessons.title')}
         </Link>
-        <h1>{lesson.title}</h1>
-        <p className="muted">{lesson.desc}</p>
+        <h1>{lessonText(t, lesson).title}</h1>
+        <p className="muted">{lessonText(t, lesson).desc}</p>
         <p className="muted small">{t('lessons.starsHelp')}</p>
       </header>
       <Runner key={id} config={config} build={build} onResult={onResult} resultExtra={resultExtra} />

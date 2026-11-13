@@ -71,7 +71,7 @@ export const Keyboard = memo(function Keyboard({ next, heat, titles }: Props) {
                 ? t('kb.fix')
                 : t('kb.press', {
                     key: charLabel(next as string),
-                    finger: FINGER_NAMES[litFinger],
+                    finger: t.opt(`finger.${litFinger}`, FINGER_NAMES[litFinger]),
                   })}
               {shiftCode &&
                 ` + ${shiftCode === 'ShiftLeft' ? t('kb.leftShift') : t('kb.rightShift')}`}
