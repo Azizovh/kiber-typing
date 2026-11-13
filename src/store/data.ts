@@ -26,6 +26,8 @@ export interface UserData {
 interface DataStore extends UserData {
   /** Save a finished run and fold its keystrokes into the profile. */
   record: (result: TestResult, keyLog: KeyEvent[]) => void;
+  /** Learn from keystrokes without adding a result to the history (placement test). */
+  absorb: (keyLog: KeyEvent[], missedWords: string[]) => void;
   recordLesson: (lessonId: string, result: TestResult, stars: number) => void;
   markSynced: (ids: string[]) => void;
   replace: (patch: Partial<UserData>) => void;
@@ -73,6 +75,8 @@ export const useData = create<DataStore>()(
           profile: mergeRun(s.profile, keyLog, result.missedWords),
           dirty: true,
         })),
+      absorb: (keyLog, missedWords) =>
+        set((s) => ({ profile: mergeRun(s.profile, keyLog, missedWords), dirty: true })),
       recordLesson: (lessonId, result, stars) =>
         set((s) => {
           const prev = s.lessons[lessonId];

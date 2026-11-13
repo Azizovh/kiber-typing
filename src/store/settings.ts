@@ -32,6 +32,11 @@ export interface Settings {
   /** Stamina-style: a wrong key is not accepted, you must hit the right one. */
   strict: boolean;
   showKeyboard: boolean;
+  /**
+   * Translucent hands over the on-screen keyboard.
+   * auto — shown while the measured typing level is "beginner".
+   */
+  hands: 'auto' | 'on' | 'off';
   showHints: boolean;
   fontSize: number;
 }
@@ -52,6 +57,7 @@ export const useSettings = create<SettingsStore>()(
       wordCount: 25,
       strict: false,
       showKeyboard: true,
+      hands: 'auto',
       showHints: true,
       fontSize: 24,
       set: (patch) => set(patch),

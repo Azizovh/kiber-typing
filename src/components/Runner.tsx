@@ -4,6 +4,7 @@ import { accuracy, buildResult, liveWpm } from '../engine/metrics';
 import { mistakeDrill } from '../engine/profile';
 import { expectedChar } from '../engine/session';
 import type { RunConfig, SessionState, TestResult, Token } from '../engine/types';
+import { useShowHands } from '../hooks/useShowHands';
 import { useTypingSession } from '../hooks/useTypingSession';
 import { useT } from '../i18n';
 import { syncAfterRun } from '../services/sync';
@@ -46,6 +47,7 @@ export function Runner({ config, build, more, onResult, resultExtra }: Props) {
   const showKeyboard = useSettings((s) => s.showKeyboard);
   const showHints = useSettings((s) => s.showHints);
   const fontSize = useSettings((s) => s.fontSize);
+  const showHands = useShowHands();
 
   const baseRun = useCallback(
     (): Run => ({ tokens: build(), config, timed: config.mode === 'time' && config.kind === 'test' }),
@@ -176,7 +178,7 @@ export function Runner({ config, build, more, onResult, resultExtra }: Props) {
         </div>
       )}
 
-      {showKeyboard && <Keyboard next={next} />}
+      {showKeyboard && <Keyboard next={next} hands={showHands} />}
 
       <div className="shortcuts">
         <span>

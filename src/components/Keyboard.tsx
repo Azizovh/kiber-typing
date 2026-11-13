@@ -1,4 +1,5 @@
-import { memo } from 'react';
+import { memo, useRef } from 'react';
+import { Hands } from './Hands';
 import { FINGER_NAMES, ROWS, charLabel, keyFor, type KeyDef } from '../keyboard/layout';
 import { useT } from '../i18n';
 
@@ -12,11 +13,14 @@ interface Props {
   heat?: Record<string, number>;
   /** key code -> tooltip text. */
   titles?: Record<string, string>;
+  /** Draw translucent hands over the keys (beginner mode). */
+  hands?: boolean;
 }
 
 /** On-screen US keyboard: shows which key — and which finger — comes next. */
-export const Keyboard = memo(function Keyboard({ next, heat, titles }: Props) {
+export const Keyboard = memo(function Keyboard({ next, heat, titles, hands }: Props) {
   const t = useT();
+  const keysRef = useRef<HTMLDivElement>(null);
   const target = typeof next === 'string' ? keyFor(next) : undefined;
   const litCode = next === null ? 'Backspace' : target?.key.code;
   const shiftCode = target?.shift ?? null;
@@ -42,7 +46,7 @@ export const Keyboard = memo(function Keyboard({ next, heat, titles }: Props) {
       .filter(Boolean)
       .join(' ');
     return (
-      <div key={key.code} className={cls} style={style} title={titles?.[key.code]}>
+      <div key={key.code} className={cls} style={style} title={titles?.[key.code]} data-code={key.code}>
         {key.base ? (
           <>
             <span className="key-shift">{key.shift.toLowerCase() === key.base ? '' : key.shift}</span>
@@ -56,12 +60,22 @@ export const Keyboard = memo(function Keyboard({ next, heat, titles }: Props) {
   };
 
   return (
-    <div className={`keyboard${heat ? ' heat' : ''}`} aria-hidden="true">
-      {ROWS.map((row, i) => (
-        <div className={row.length === 1 ? 'key-row space-row' : 'key-row'} key={i}>
-          {row.map(renderKey)}
-        </div>
-      ))}
+    <div className={`keyboard${heat ? ' heat' : ''}${hands ? ' with-hands' : ''}`} aria-hidden="true">
+      <div className="keys" ref={keysRef}>
+        {ROWS.map((row, i) => (
+          <div className={row.length === 1 ? 'key-row space-row' : 'key-row'} key={i}>
+            {row.map(renderKey)}
+          </div>
+        ))}
+        {hands && !heat && (
+          <Hands
+            keysRef={keysRef}
+            targetCode={litCode}
+            targetFinger={litFinger}
+            shiftCode={shiftCode}
+          />
+        )}
+      </div>
       {!heat && (
         <div className="finger-hint">
           {litFinger ? (

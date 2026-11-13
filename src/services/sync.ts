@@ -3,6 +3,7 @@ import { addProfiles, emptyProfile } from '../engine/profile';
 import type { TestResult, TypingProfile } from '../engine/types';
 import { useAuth } from '../store/auth';
 import { MAX_RESULTS, mergeLessons, useData, type LessonProgress } from '../store/data';
+import { onboardingData, useOnboarding, type OnboardingData } from '../store/onboarding';
 import { supabase } from './supabase';
 
 /** Shape of a row in the `results` table (see supabase/schema.sql). */
@@ -157,6 +158,44 @@ async function hydrate(userId: string): Promise<void> {
   if (useData.getState().dirty) await pushState(userId);
 }
 
+/** Save placement answers and profile details. A no-op for guests. */
+export async function syncOnboarding(): Promise<void> {
+  const { user } = useAuth.getState();
+  const data = onboardingData();
+  if (!supabase || !user || data.status === 'pending') return;
+  const state = await supabase
+    .from('user_state')
+    .upsert({ user_id: user.id, onboarding: data, updated_at: new Date().toISOString() });
+  if (fail('saving placement', state.error)) return;
+  const profile = await supabase
+    .from('profiles')
+    .update({ display_name: data.name || null, country: data.country || null })
+    .eq('id', user.id);
+  fail('saving profile', profile.error);
+}
+
+/**
+ * Placement follows the person, not the browser: on a new device the cloud
+ * copy is adopted so nobody is asked twice.
+ */
+async function hydrateOnboarding(userId: string): Promise<void> {
+  if (!supabase) return;
+  const { data, error } = await supabase
+    .from('user_state')
+    .select('onboarding')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (error) {
+    // Most likely migration 002 has not been run yet; everything else still works.
+    console.warn(`[sync] loading placement: ${error.message}`);
+    return;
+  }
+  const remote = data?.onboarding as OnboardingData | null | undefined;
+  const local = onboardingData();
+  if (remote?.status === 'done' && local.status !== 'done') useOnboarding.getState().set(remote);
+  else if (local.status !== 'pending') await syncOnboarding();
+}
+
 async function onUser(user: User): Promise<void> {
   if (!supabase) return;
   const { data } = await supabase.from('profiles').select('username').eq('id', user.id).maybeSingle();
@@ -170,6 +209,7 @@ async function onUser(user: User): Promise<void> {
     user: { id: user.id, email: user.email ?? '', username },
   });
   await hydrate(user.id);
+  await hydrateOnboarding(user.id);
 }
 
 let started = false;

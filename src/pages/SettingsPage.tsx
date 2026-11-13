@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useOnboarding } from '../store/onboarding';
 import { LANGUAGES, useT } from '../i18n';
 import { useAuth } from '../store/auth';
 import { useData } from '../store/data';
@@ -39,6 +41,7 @@ export function SettingsPage() {
   const s = useSettings();
   const signedIn = useAuth((a) => a.status === 'user');
   const [confirming, setConfirming] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="page narrow">
@@ -86,6 +89,19 @@ export function SettingsPage() {
         value={s.showKeyboard}
         onChange={(showKeyboard) => s.set({ showKeyboard })}
       />
+      <div className="setting">
+        <div>
+          <h3>{t('settings.hands')}</h3>
+          <p className="muted small">{t('settings.handsHelp')}</p>
+        </div>
+        <div className="seg">
+          {(['auto', 'on', 'off'] as const).map((mode) => (
+            <button key={mode} className={s.hands === mode ? 'on' : ''} onClick={() => s.set({ hands: mode })}>
+              {mode === 'auto' ? t('settings.auto') : t.opt(`common.${mode}`, mode)}
+            </button>
+          ))}
+        </div>
+      </div>
       <Toggle
         label={t('opt.hints')}
         help={t('settings.hintsHelp')}
@@ -105,6 +121,22 @@ export function SettingsPage() {
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="setting">
+        <div>
+          <h3>{t('settings.placement')}</h3>
+          <p className="muted small">{t('settings.placementHelp')}</p>
+        </div>
+        <button
+          className="btn"
+          onClick={() => {
+            useOnboarding.getState().set({ status: 'pending' });
+            navigate('/welcome');
+          }}
+        >
+          {t('settings.retake')}
+        </button>
       </div>
 
       {!signedIn && (

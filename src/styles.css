@@ -501,10 +501,40 @@ body[data-typing] .lesson-head {
   font-size: 13px;
   user-select: none;
 }
+.keys {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 .key-row {
   display: flex;
   gap: 5px;
   justify-content: center;
+}
+/* Beginner mode: translucent hands over the keys. They hang below the
+   keyboard like real wrists, so leave room for them. */
+.keyboard.with-hands .keys {
+  margin-bottom: 4.5em;
+}
+.hands {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hand-skin {
+  opacity: 0.3;
+  fill: var(--text);
+  stroke: var(--text);
+  stroke-linecap: round;
+}
+.hand-active {
+  opacity: 0.6;
+  fill: var(--finger);
+  stroke: var(--finger);
+  stroke-linecap: round;
 }
 .key {
   position: relative;
@@ -963,6 +993,99 @@ body[data-typing] .lesson-head {
   transition: opacity 0.25s;
 }
 
+/* ── Welcome / placement ────────────────────────────────────────────────── */
+.welcome {
+  gap: 22px;
+}
+.welcome-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+}
+.welcome-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 560px;
+  width: 100%;
+  margin: 24px auto 0;
+}
+.welcome-card.wide {
+  max-width: 760px;
+}
+.welcome-points {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--muted);
+}
+.welcome-points li::marker {
+  color: var(--accent);
+}
+.welcome-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.field i {
+  font-style: normal;
+  font-size: 0.8rem;
+}
+.field input,
+.field select {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+}
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.quiz-question {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+.quiz-question code {
+  color: var(--accent-2);
+}
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.quiz-options .btn {
+  justify-content: flex-start;
+  text-align: left;
+  padding: 12px 16px;
+  line-height: 1.4;
+}
+.quiz-options .btn:hover {
+  border-color: var(--accent);
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--muted);
+  border-style: dashed;
+}
+
 /* ── Settings, account ──────────────────────────────────────────────────── */
 .setting {
   display: flex;
@@ -1072,6 +1195,8 @@ dd {
   }
   .keyboard {
     font-size: 9px;
+  }
+  .keys {
     gap: 3px;
   }
   .key-row {
