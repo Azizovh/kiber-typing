@@ -34,7 +34,11 @@ function AuthForm() {
         await signIn(email.trim(), password);
       } else {
         const { needsConfirmation } = await signUp(email.trim(), password, username);
-        if (needsConfirmation) setInfo(t('account.confirm'));
+        if (needsConfirmation) {
+          setInfo(t('account.confirm'));
+          // The next thing to do here is sign in, so show that form.
+          setTab('in');
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

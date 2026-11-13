@@ -210,7 +210,13 @@ export async function signUp(email: string, password: string, username: string) 
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { username } },
+    options: {
+      data: { username },
+      // Send the confirmation link back to wherever the app is actually served
+      // (a GitHub Pages project site lives under a sub-path, not at the domain
+      // root). The address must be allowed in Supabase → Auth → URL Configuration.
+      emailRedirectTo: window.location.origin + window.location.pathname,
+    },
   });
   if (error) throw new Error(error.message);
   // With email confirmation on, there is no session until the link is clicked.
