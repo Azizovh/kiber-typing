@@ -298,13 +298,13 @@ body[data-typing] .lesson-head {
 }
 .seg {
   display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100%;
   background: var(--surface);
   border-radius: 9px;
   padding: 3px;
   gap: 2px;
-}
-.seg.wrap {
-  flex-wrap: wrap;
 }
 .seg button,
 .seg select {

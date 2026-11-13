@@ -6,7 +6,7 @@ import { cloudEnabled } from '../services/supabase';
 import { fetchLeaderboard, type LeaderboardRow } from '../services/sync';
 import { useAuth } from '../store/auth';
 import { useData } from '../store/data';
-import { DURATIONS, WORD_COUNTS } from '../store/settings';
+import { DURATIONS, WORD_COUNTS, useSettings } from '../store/settings';
 
 const CATEGORIES: { id: Category; label: MessageKey }[] = [
   { id: 'mixed', label: 'cat.mixed' },
@@ -24,9 +24,14 @@ export function LeaderboardPage() {
   const t = useT();
   const me = useAuth((s) => s.user);
   const results = useData((s) => s.results);
-  const [category, setCategory] = useState<Category>('mixed');
-  const [mode, setMode] = useState<LengthMode>('time');
-  const [length, setLength] = useState<number>(60);
+  // Open on the board for the test the person actually plays, not a fixed one —
+  // otherwise their own results look like they were never saved.
+  const settings = useSettings.getState();
+  const [category, setCategory] = useState<Category>(settings.category);
+  const [mode, setMode] = useState<LengthMode>(settings.mode);
+  const [length, setLength] = useState<number>(
+    settings.mode === 'time' ? settings.duration : settings.wordCount,
+  );
   const [load, setLoad] = useState<Load>({ status: 'loading' });
 
   const lengths = mode === 'time' ? DURATIONS : WORD_COUNTS;
@@ -77,7 +82,7 @@ export function LeaderboardPage() {
               className={mode === m ? 'on' : ''}
               onClick={() => {
                 setMode(m);
-                setLength(m === 'time' ? 60 : 50);
+                setLength(m === 'time' ? settings.duration : settings.wordCount);
               }}
             >
               {t(m === 'time' ? 'mode.time' : 'mode.words')}
